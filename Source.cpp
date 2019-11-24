@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include <conio.h>
+#include <iomanip>
 using namespace std;
 int search(int a[], int n, int key)
 {
@@ -74,7 +75,7 @@ void selectionSort(int a[], int n)
 void insertionSort(int a[], int n)
 {
 	int pos, x;
-	for (int i = 0; i < n; i++)
+	for (int i = 1; i < n; i++)
 	{
 		x = a[i];
 		pos = i - 1;
@@ -102,10 +103,10 @@ void Menu()
 int main()
 {
 	clock_t t1, t2;
-	double tg;
+	float tg;
 	int a[100001], n, key, kq;
 	FILE* f;
-	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data005.in", "r");
+	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data009.in", "r");
 	if (f == NULL)
 		cout << "Shit";
 	fscanf(f, "%d", &n);
@@ -149,29 +150,33 @@ int main()
 			t1 = clock();
 			interchangeSort(a, n);
 			t2 = clock();
-			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
-			cout << "interchange Sort TIME: " << tg << endl;
+			tg = ((float)t2 - t1) / CLOCKS_PER_SEC;
+			cout.precision(6);
+			cout << fixed << "interchange Sort TIME: " << tg << endl;
 			break;
 		case'5':
 			t1 = clock();
 			bubbleSort(a, n);
 			t2 = clock();
-			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
-			cout << "Bubble Sort TIME: " << tg << endl;
-			break;
+			tg = ((double)t2 - t1) / CLOCKS_PER_SEC;
+			cout.precision(6);
+			cout << fixed << "Bubble Sort TIME: " << tg << endl;
+			break; 
 		case'6':
 			t1 = clock();
 			selectionSort(a, n);
 			t2 = clock();
-			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
-			cout << "selection Sort TIME: " << tg << endl;
+			tg = ((double)t2 - (double)t1) / CLOCKS_PER_SEC;
+			cout.precision(6);
+			cout << fixed << "selection Sort TIME: " << tg << endl;
 			break;
 		case'7':
 			t1 = clock();
 			insertionSort(a, n);
 			t2 = clock();
-			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
-			cout << "insertion Sort TIME: " << tg << endl;
+			tg = ((double)t2 - (double)t1) / CLOCKS_PER_SEC;
+			cout.precision(6);
+			cout << fixed << "insertion Sort TIME: " << tg << endl;
 			break;
 		default:
 			cout << "INPUT THE RIGHT NUMBER YOU IDIOT!";
