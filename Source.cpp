@@ -56,7 +56,7 @@ void bubbleSort(int a[], int n)
 {
 	for (int i = 0; i < n - 1; i++)
 	{
-		for (int j = i + 1; j < n; j++)
+		for (int j = n-1; j > i; j--)
 			if (a[j] < a[j - 1])
 				swap(a[j], a[j - 1]);
 	}
@@ -113,7 +113,7 @@ int main()
 	float tg;
 	int a[100001], b[100001], n, key, kq;
 	FILE* f;
-	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data005.in", "r");
+	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data006.in", "r");
 	if (f == NULL)
 		cout << "Shit";
 	fscanf(f, "%d", &n);
