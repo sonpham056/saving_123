@@ -1,183 +1,184 @@
-﻿#include <iostream>
+﻿#pragma warning(disable : 4996)
+#include <iostream>
+#include <time.h>
 #include <conio.h>
-#include <windows.h>
 using namespace std;
-const int width = 30, height = 30;
-int point = 0, flag = 0, level = 0, TIME = 100;
-char screen[1000][1000];
-enum sMove { UP, LEFT, DOWN, RIGHT };
-//------------------------------------------------------
-void gotoxy(int x, int y)
+int search(int a[], int n, int key)
 {
-	static HANDLE h = NULL;
-	if (!h)
-		h = GetStdHandle(STD_OUTPUT_HANDLE);
-	COORD c = { x, y };
-	SetConsoleCursorPosition(h, c);
-}
-void Nocursortype()
-{
-	CONSOLE_CURSOR_INFO Info;
-	Info.bVisible = FALSE;
-	Info.dwSize = 20;
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &Info);
-}
-//------------------------------------------------------
-struct toaDo {
-	int x, y;
-};
-struct Snake {
-	toaDo body[100];
-	int n;
-	sMove move;
-};
-struct Food {
-	toaDo td;
-};
-void new_Snake(Snake& snake, Food &food)
-{
-	snake.n = 2;
-	snake.body[0].x = width/2;
-	snake.body[0].y = height/2;
-	snake.body[1].x = width / 2;
-	snake.body[1].y = height / 2-1;
-	snake.move = RIGHT;
-	food.td.x = rand() % width;
-	food.td.y = rand() % height;
-}
-void draw(Snake snake, Food food)
-{
-	Nocursortype();
-	//Vẽ cái khung (Gán giá trị)
-	for (int i = 0; i < height; i++)
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = 0; j <= width; j++)
+		if (a[i] == key)
 		{
-			if (i == 0 || j == 0 || i == height - 1 || j == width - 1)
-				screen[i][j] = 176;
-			else
-				screen[i][j] = 32;
-			if (j == width && i != height - 1)
-				screen[i][j] = '\n';
-			else if (i == height - 1 && j == width)
-				screen[i][j] = ' ';
+			return i;
 		}
 	}
-	screen[food.td.y][food.td.x] = 'A';
-	screen[snake.body[0].y][snake.body[0].x] = 178;
-	for (int i = 1; i < snake.n; i++)
-	{
-		screen[snake.body[i].y][snake.body[i].x] = '*';
-	}
-	//Vẽ giá trị
-	gotoxy(0, 0);
-	for (int i = 0; i < height; i++)
-	{
-		for (int j = 0; j <= width; j++)
-		{
-			cout << screen[i][j];
-		}
-
-	}
-	if (flag == 2)
-	{
-		level++;
-		flag = 0;
-		if (TIME >= 20)
-			TIME -= 10;
-	}
-	gotoxy(width, height / 2 + 1);
-	cout << "Point: " << snake.n - 1;
-	gotoxy(width, height / 2 + 2);
-	if (TIME >= 15)
-		cout << "Level: " << level;
-	else
-		cout << "Level MAX!";
-	
+	return -1;
 }
-void moving(Snake &snake)
+int binarySearch(int a[], int n, int key)
 {
-	for (int i = snake.n - 1; i > 0; i--)
-		snake.body[i] = snake.body[i - 1];
-	if (_kbhit())
+	int LEFT, RIGHT, MID;
+	LEFT = 0;
+	RIGHT = n - 1;
+	while (LEFT <= RIGHT)
 	{
-		switch (_getch())
+		MID = (LEFT + RIGHT) / 2;
+		if (a[MID] == key)
+			return MID;
+		if (a[MID] > key)
+			RIGHT = MID - 1;
+		else
+			LEFT = MID + 1;
+	}
+	return -1;
+}
+void swap(int &a, int &b)
+{
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+void interchangeSort(int a[], int n)
+{
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
 		{
-		case 'w': snake.move = UP;
-			break;
-		case 'a': snake.move = LEFT;
-			break;
-		case 's': snake.move = DOWN;
-			break;
-		case 'd': snake.move = RIGHT;
-			break;
+			if (a[i] > a[j])
+			{
+				swap(a[i], a[j]);
+			}
 		}
 	}
-	switch (snake.move)
+}
+void bubbleSort(int a[], int n)
+{
+	for (int i = 0; i < n - 1; i++)
 	{
-	case UP: snake.body[0].y--;
-		break;
-	case LEFT: snake.body[0].x--;
-		break;
-	case DOWN: snake.body[0].y++;
-		break;
-	case RIGHT: snake.body[0].x++;
-		break;
+		for (int j = i + 1; j < n; j++)
+			if (a[j] < a[j - 1])
+				swap(a[j], a[j - 1]);
 	}
 }
-void gameLogic(Snake &snake, Food &food)
+void selectionSort(int a[], int n)
 {
-	if (snake.body[0].x == food.td.x && snake.body[0].y == food.td.y)
+	for (int i = 0; i < n - 1; i++)
 	{
-		//Gắn đuôi.
-		for (int i = snake.n; i > snake.n - 1; i--)
+		int locMin = i;
+		for (int j = i + 1; j < n; j++)
+			if(a[j] < a[locMin])
+				locMin = j;
+		swap(a[locMin], a[i]);
+	}
+}
+void insertionSort(int a[], int n)
+{
+	int pos, x;
+	for (int i = 0; i < n; i++)
+	{
+		x = a[i];
+		pos = i - 1;
+		while (pos >= 0 && a[pos] > x)
 		{
-			snake.body[i] = snake.body[i - 1];
+			a[pos + 1] = a[pos];
+			pos--;
 		}
-		snake.n++;
-		//CHuyển thức ăn
-		food.td.x = 1 + rand() % (width - 2);
-		food.td.y = 1 + rand() % (height - 2);
-		//điểm
-		flag++;
+		a[pos + 1] = x;
 	}
 }
-bool endGame(Snake snake)
+void Menu()
 {
-	for (int i = 1; i < snake.n; i++)
-	{
-		if (snake.body[i].x == snake.body[0].x && snake.body[i].y == snake.body[0].y)
-			return false;
-		if (snake.body[0].x == width - 1 || snake.body[0].y == height - 1 || snake.body[0].x == 0 || snake.body[0].y == 0)
-			return false;
-	}
-	return true;
+	cout << "-----------------------\n";
+	cout << "Input a number to run!";
+	cout << "\n1. File output";
+	cout << "\n2. Search";
+	cout << "\n3. Binary Search";
+	cout << "\n4. interchange Sort";
+	cout << "\n5. Bubble Sort";
+	cout << "\n6. selection Sort";
+	cout << "\n7. insertion Sort";
+	cout << "\nPress ENTER to exit!\n";
 }
 int main()
 {
-	Snake snake;
-	Food food;
-	new_Snake(snake,food);
-	while (1)
+	clock_t t1, t2;
+	double tg;
+	int a[100001], n, key, kq;
+	FILE* f;
+	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data005.in", "r");
+	if (f == NULL)
+		cout << "Shit";
+	fscanf(f, "%d", &n);
+	for (int i = 0; i < n; i++)
 	{
-		//Hiển thị
-		draw(snake, food);
-
-		//Điều khiển
-		moving(snake);
-
-		//Xử lí
-		gameLogic(snake, food);
-		//End game
-		if (endGame(snake) == false)
+		fscanf(f, "%d", &a[i]);
+	}
+	fclose(f);
+	Menu();
+	char temp = _getch();
+	while (temp != 13)
+	{
+		cout << "inputted number: " << (int)temp - 48 << endl;
+		switch (temp)
 		{
-			gotoxy(width, height / 2);
-			cout << "YOU LOSE! Press Enter to Exit";
-			while (_getch() != 13);
+		case '1':
+			for (int i = 0; i < n; i++)
+			{
+				cout << a[i] << " ";
+			}
 			break;
-		} 
-		//sleep
-		Sleep(TIME);
+		case '2':
+			cout << "\nNhap so can tim: ";
+			cin >> key;
+			kq = search(a, n, key);
+			if (kq != -1)
+				cout << "Vi tri cua so can tim la: " << kq;
+			else
+				cout << "Error! Khong tim thay";
+			break;
+		case '3':
+			cout << "\nNhap so can tim: ";
+			cin >> key;
+			kq = binarySearch(a, n, key);
+			if (kq != -1)
+				cout << "Vi tri cua so can tim la: " << kq;
+			else
+				cout << "Error! Khong tim thay";
+			break;
+		case '4':
+			t1 = clock();
+			interchangeSort(a, n);
+			t2 = clock();
+			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
+			cout << "interchange Sort TIME: " << tg << endl;
+			break;
+		case'5':
+			t1 = clock();
+			bubbleSort(a, n);
+			t2 = clock();
+			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
+			cout << "Bubble Sort TIME: " << tg << endl;
+			break;
+		case'6':
+			t1 = clock();
+			selectionSort(a, n);
+			t2 = clock();
+			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
+			cout << "selection Sort TIME: " << tg << endl;
+			break;
+		case'7':
+			t1 = clock();
+			insertionSort(a, n);
+			t2 = clock();
+			tg = (double)(t2 - t1) / CLOCKS_PER_SEC;
+			cout << "insertion Sort TIME: " << tg << endl;
+			break;
+		default:
+			cout << "INPUT THE RIGHT NUMBER YOU IDIOT!";
+		}
+		cout << "\n";
+		Menu();
+		temp = _getch();
 	}
 	return 0;
 }
