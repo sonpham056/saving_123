@@ -1,4 +1,4 @@
-﻿#pragma warning(disable : 4996)
+#pragma warning(disable : 4996)
 #include <iostream>
 #include <time.h>
 #include <conio.h>
@@ -87,6 +87,13 @@ void insertionSort(int a[], int n)
 		a[pos + 1] = x;
 	}
 }
+void copy(int a[], int b[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		b[i] = a[i];
+	}
+}
 void Menu()
 {
 	cout << "-----------------------\n";
@@ -104,9 +111,9 @@ int main()
 {
 	clock_t t1, t2;
 	float tg;
-	int a[100001], n, key, kq;
+	int a[100001], b[100001], n, key, kq;
 	FILE* f;
-	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data009.in", "r");
+	f = fopen("D:\\Hoctap\\CTDL_va_GT\\data005.in", "r");
 	if (f == NULL)
 		cout << "Shit";
 	fscanf(f, "%d", &n);
@@ -115,6 +122,7 @@ int main()
 		fscanf(f, "%d", &a[i]);
 	}
 	fclose(f);
+	copy(a, b, n);
 	Menu();
 	char temp = _getch();
 	while (temp != 13)
@@ -148,35 +156,39 @@ int main()
 			break;
 		case '4':
 			t1 = clock();
-			interchangeSort(a, n);
+			interchangeSort(b, n);
 			t2 = clock();
 			tg = ((float)t2 - t1) / CLOCKS_PER_SEC;
 			cout.precision(6);
 			cout << fixed << "interchange Sort TIME: " << tg << endl;
+			copy(a, b, n);
 			break;
 		case'5':
 			t1 = clock();
-			bubbleSort(a, n);
+			bubbleSort(b, n);
 			t2 = clock();
-			tg = ((double)t2 - t1) / CLOCKS_PER_SEC;
+			tg = ((float)t2 - t1) / CLOCKS_PER_SEC;
 			cout.precision(6);
 			cout << fixed << "Bubble Sort TIME: " << tg << endl;
+			copy(a, b, n);
 			break; 
 		case'6':
 			t1 = clock();
-			selectionSort(a, n);
+			selectionSort(b, n);
 			t2 = clock();
-			tg = ((double)t2 - (double)t1) / CLOCKS_PER_SEC;
+			tg = ((float)t2 - t1) / CLOCKS_PER_SEC;
 			cout.precision(6);
 			cout << fixed << "selection Sort TIME: " << tg << endl;
+			copy(a, b, n);
 			break;
 		case'7':
 			t1 = clock();
-			insertionSort(a, n);
+			insertionSort(b, n);
 			t2 = clock();
-			tg = ((double)t2 - (double)t1) / CLOCKS_PER_SEC;
+			tg = ((float)t2 - t1) / CLOCKS_PER_SEC;
 			cout.precision(6);
 			cout << fixed << "insertion Sort TIME: " << tg << endl;
+			copy(a, b, n);
 			break;
 		default:
 			cout << "INPUT THE RIGHT NUMBER YOU IDIOT!";
